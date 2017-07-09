@@ -11,7 +11,7 @@ import android.view.View;
  */
 
 public class CallbackUtils {
-    public static boolean isValid(View view) {
+    public static boolean isViewValid(View view) {
         if (view == null) {
             return false;
         }
@@ -32,12 +32,17 @@ public class CallbackUtils {
         }
     }
 
-    //fragment内部回调判断
-    public static boolean isValid(Fragment fragment) {
+    /**
+     * fragment内部回调调用
+     *
+     * @param fragment
+     * @return
+     */
+    public static boolean isFragmentValid(Fragment fragment) {
         if (fragment == null) {
             return false;
         }
-        if (!isValid(fragment.getActivity())) {
+        if (!isActivityValid(fragment.getActivity())) {
             return false;
         }
         if (!fragment.isAdded()) {
@@ -46,7 +51,7 @@ public class CallbackUtils {
         return true;
     }
 
-    public static boolean isValid(Activity activity) {
+    public static boolean isActivityValid(Activity activity) {
         if (activity == null) {
             return false;
         }
