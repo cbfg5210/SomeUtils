@@ -7,31 +7,37 @@
     <ImageView
         android:id="@+id/iv_ad_icon"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:tag="@string/tag_ad_icon" />
 
     <TextView
         android:id="@+id/tv_ad_title"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:tag="@string/tag_ad_title" />
 
     <TextView
         android:id="@+id/tv_ad_content"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:tag="@string/tag_ad_content" />
 
     <ImageView
         android:id="@+id/iv_ad_poster"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:tag="@string/tag_ad_poster" />
 
     <TextView
         android:id="@+id/tv_ad_action"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:tag="@string/tag_ad_action" />
 
     <FrameLayout
         android:id="@+id/vg_ad_choice_container"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:tag="@string/tag_ad_choice_container" />
 
 </RelativeLayout>

@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">SomeUtils</string>
+
+    <string name="tag_ad_icon" translatable="false">ad_icon</string>
+    <string name="tag_ad_title" translatable="false">ad_title</string>
+    <string name="tag_ad_content" translatable="false">ad_content</string>
+    <string name="tag_ad_poster" translatable="false">ad_poster</string>
+    <string name="tag_ad_action" translatable="false">ad_action</string>
+    <string name="tag_ad_choice_container" translatable="false">ad_choice_container</string>
 </resources>

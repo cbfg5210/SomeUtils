@@ -1,6 +1,7 @@
 package com.ue.someutils.ad.facebook;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,52 +16,57 @@ import com.ue.someutils.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 /**
  * Created by xin on 5/3/17.
  */
 
-//根据xml布局替换FrameLayout
-public class NativeAdLayout extends FrameLayout {
+public class FbNativeAdView extends FrameLayout {
+    private int layoutRes;
 
-    @BindView(R.id.iv_ad_icon)
-    ImageView ivAdIcon;
-    @BindView(R.id.tv_ad_title)
-    TextView tvAdTitle;
-    @BindView(R.id.tv_ad_content)
-    TextView tvAdContent;
-    @BindView(R.id.iv_ad_poster)
-    ImageView ivAdPoster;
-    @BindView(R.id.tv_ad_action)
-    TextView tvAdAction;
-    @BindView(R.id.vg_ad_choice_container)
-    ViewGroup vgAdChoiceContainer;
+    private ImageView ivAdIcon;
+    private TextView tvAdTitle;
+    private TextView tvAdContent;
+    private ImageView ivAdPoster;
+    private TextView tvAdAction;
+    private ViewGroup vgAdChoiceContainer;
 
-    public NativeAdLayout(Context context) {
+    public FbNativeAdView(Context context) {
         super(context);
         init(context, null);
     }
 
-    public NativeAdLayout(Context context, AttributeSet attrs) {
+    public FbNativeAdView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
 
-    public NativeAdLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public FbNativeAdView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }
 
     private void init(Context context, AttributeSet attrs) {
-
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.FbNativeAdView);
+        if (typedArray != null) {
+            layoutRes = typedArray.getResourceId(R.styleable.FbNativeAdView_layoutRes, -1);
+            typedArray.recycle();
+        }
+        if (layoutRes == -1) {
+            throw new IllegalArgumentException("no layoutRes");
+        }
+        View.inflate(context, layoutRes, this);
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        ButterKnife.bind(this);
+
+        ivAdIcon = (ImageView) findViewWithTag(getResources().getString(R.string.tag_ad_icon));
+        tvAdTitle = (TextView) findViewWithTag(getResources().getString(R.string.tag_ad_title));
+        tvAdContent = (TextView) findViewWithTag(getResources().getString(R.string.tag_ad_content));
+        ivAdPoster = (ImageView) findViewWithTag(getResources().getString(R.string.tag_ad_poster));
+        tvAdAction = (TextView) findViewWithTag(getResources().getString(R.string.tag_ad_action));
+        vgAdChoiceContainer = (ViewGroup) findViewWithTag(getResources().getString(R.string.tag_ad_choice_container));
     }
 
     public void showFacebookAd(NativeAd nativeAd) {
