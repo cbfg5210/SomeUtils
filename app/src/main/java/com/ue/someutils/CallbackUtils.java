@@ -11,6 +11,12 @@ import android.view.View;
  */
 
 public class CallbackUtils {
+    /**
+     * onCreate时调用可能不对
+     *
+     * @param view
+     * @return
+     */
     public static boolean isViewValid(View view) {
         if (view == null) {
             return false;
@@ -25,11 +31,15 @@ public class CallbackUtils {
         if (fragment == null) {
             return;
         }
+        if (!fragment.isAdded()) {
+            return;
+        }
         //avoid IllegalStateException:
         //Can not perform this action after onSaveInstanceState
-        if (fragment.isAdded() && fragment.isResumed()) {
-            fragment.dismiss();
+        if (!fragment.isResumed()) {
+            return;
         }
+        fragment.dismiss();
     }
 
     /**
@@ -46,6 +56,9 @@ public class CallbackUtils {
             return false;
         }
         if (!fragment.isAdded()) {
+            return false;
+        }
+        if (!fragment.isResumed()) {
             return false;
         }
         return true;
