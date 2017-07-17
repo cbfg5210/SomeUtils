@@ -6,6 +6,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.view.View;
 
+import com.ue.someutils.base.BaseActivity;
+
 /**
  * Created by hujiang on 2017/6/29.
  */
@@ -25,6 +27,22 @@ public class CallbackUtils {
             return false;
         }
         return true;
+    }
+
+    public static void showDialogFragment(BaseActivity context, DialogFragment dialog, String tag) {
+        if (!isActivityValid(context)) {
+            return;
+        }
+        if (context.isHasSavedInstanceState()) {
+            return;
+        }
+        if (dialog == null) {
+            return;
+        }
+        if (dialog.isAdded()) {
+            return;
+        }
+        dialog.show(context.getSupportFragmentManager(), tag);
     }
 
     public static void dismissDialogFragment(DialogFragment fragment) {
