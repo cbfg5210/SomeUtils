@@ -1,26 +1,24 @@
 package com.ue.someutils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.widget.Toast;
+
+import java.util.Locale;
+
+import static android.os.Looper.getMainLooper;
 
 /**
  * Created by hujiang on 2017/7/18.
  */
 
 public class IntentUtils {
-    private static boolean isActivityValid(Activity context) {
-        if (context == null) {
-            return false;
-        }
-        if (context.isFinishing()) {
-            return false;
-        }
-        return true;
-    }
-
     /**
      * 安全跳转页面
      *
@@ -28,8 +26,8 @@ public class IntentUtils {
      * @param intent
      * @return
      */
-    public static boolean safelyStartActivity(final Activity context, Intent intent, final String errTip) {
-        if (!isActivityValid(context)) {
+    public static boolean safelyStartActivity(final Context context, Intent intent, final String errTip) {
+        if (context == null) {
             return false;
         }
         if (intent == null) {
@@ -43,7 +41,11 @@ public class IntentUtils {
             if (TextUtils.isEmpty(errTip)) {
                 return false;
             }
-            context.runOnUiThread(new Runnable() {
+            Looper mainLooper = getMainLooper();
+            if (mainLooper == null) {
+                return false;
+            }
+            new Handler(mainLooper).post(new Runnable() {
                 @Override
                 public void run() {
                     Toast.makeText(context, errTip, Toast.LENGTH_SHORT).show();
@@ -61,7 +63,7 @@ public class IntentUtils {
      * @param errTip
      */
     public static void openUrlWithViewIntent(Activity context, String url, final String errTip) {
-        if (!isActivityValid(context)) {
+        if (context == null) {
             return;
         }
         if (TextUtils.isEmpty(url)) {
@@ -77,8 +79,8 @@ public class IntentUtils {
      * @param uri
      * @param errTip
      */
-    public static void openUriWithViewIntent(final Activity context, Uri uri, final String errTip) {
-        if (!isActivityValid(context)) {
+    public static void openUriWithViewIntent(final Context context, Uri uri, final String errTip) {
+        if (context == null) {
             return;
         }
         if (uri == null) {
@@ -95,8 +97,8 @@ public class IntentUtils {
      * @param context
      * @param errTip
      */
-    public static void goToAppMarket(Activity context, String errTip) {
-        if (!isActivityValid(context)) {
+    public static void goToAppMarket(Context context, String errTip) {
+        if (context == null) {
             return;
         }
         Uri marketUri = Uri.parse("market://details?id=" + BuildConfig.APPLICATION_ID);
@@ -115,8 +117,8 @@ public class IntentUtils {
      * @param chooserTitle
      * @param errTip
      */
-    public static void goToSendEmail(Activity context, String toEmail, String subject, String chooserTitle, String errTip) {
-        if (!isActivityValid(context)) {
+    public static void goToSendEmail(Context context, String toEmail, String subject, String chooserTitle, String errTip) {
+        if (context == null) {
             return;
         }
         if (TextUtils.isEmpty(toEmail)) {
@@ -133,5 +135,18 @@ public class IntentUtils {
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
 
         safelyStartActivity(context, Intent.createChooser(emailIntent, chooserTitle), errTip);
+    }
+
+    public static void goToAppDetailPage(Context context) {
+        if (context == null) {
+            return;
+        }
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        intent.setData(Uri.parse("package:" + context.getPackageName()));
+
+        boolean isZhLanguage = Locale.getDefault().getLanguage().equals(new Locale("zh").getLanguage());
+        String toastMsg = isZhLanguage ? "定位不到设置页面,请手动前往设置" : "Failed to open the setting page,please go to setting page manually.";
+
+        safelyStartActivity(context, intent, toastMsg);
     }
 }
