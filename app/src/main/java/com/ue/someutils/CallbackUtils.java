@@ -3,6 +3,7 @@ package com.ue.someutils;
 import android.app.Activity;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewCompat;
 import android.view.View;
 
@@ -14,7 +15,7 @@ import com.ue.someutils.base.BaseActivity;
 
 public class CallbackUtils {
     /**
-     * onCreate时调用可能不对
+     * onCreate时调用无效
      *
      * @param view
      * @return
@@ -29,11 +30,23 @@ public class CallbackUtils {
         return true;
     }
 
-    public static void showDialogFragment(BaseActivity context, DialogFragment dialog, String tag) {
+    /**
+     * 显示DialogFragment
+     * 避免NullPointerException和IllegalStateException
+     *
+     * @param context
+     * @param dialog
+     * @param tag
+     */
+    public static void showDialogFragment(FragmentActivity context, DialogFragment dialog, String tag) {
         if (!isActivityValid(context)) {
             return;
         }
-        if (context.isHasSavedInstanceState()) {
+        if (!(context instanceof BaseActivity)) {
+            throw new IllegalArgumentException(context.getClass().getSimpleName() + "没有继承BaseActivity");
+        }
+        BaseActivity baseActivity = (BaseActivity) context;
+        if (baseActivity.isHasSavedInstanceState()) {
             return;
         }
         if (dialog == null) {
@@ -45,6 +58,12 @@ public class CallbackUtils {
         dialog.show(context.getSupportFragmentManager(), tag);
     }
 
+    /**
+     * 注销DialogFragment
+     * 避免NullPointerException和IllegalStateException
+     *
+     * @param fragment
+     */
     public static void dismissDialogFragment(DialogFragment fragment) {
         if (fragment == null) {
             return;
@@ -62,6 +81,7 @@ public class CallbackUtils {
 
     /**
      * fragment内部回调调用
+     * 备注：在onResume前调用无效
      *
      * @param fragment
      * @return
