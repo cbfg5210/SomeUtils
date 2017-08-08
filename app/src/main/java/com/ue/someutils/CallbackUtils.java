@@ -30,6 +30,16 @@ public class CallbackUtils {
         return true;
     }
 
+    public static void showDialogFragment(Fragment context, DialogFragment dialog, String tag) {
+        if (!isFragmentValid(context)) {
+            return;
+        }
+        if (context.getChildFragmentManager().findFragmentByTag(tag) != null) {
+            return;
+        }
+        dialog.show(context.getChildFragmentManager(), tag);
+    }
+
     /**
      * 显示DialogFragment
      * 避免NullPointerException和IllegalStateException
@@ -40,6 +50,9 @@ public class CallbackUtils {
      */
     public static void showDialogFragment(FragmentActivity context, DialogFragment dialog, String tag) {
         if (!isActivityValid(context)) {
+            return;
+        }
+        if (context.getSupportFragmentManager().findFragmentByTag(tag) != null) {
             return;
         }
         if (!(context instanceof BaseActivity)) {
