@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.LinkedList;
+import com.socks.library.KLog;
 
 /**
  * Created by hujiang on 2017/6/26.
@@ -27,11 +27,13 @@ public class NotificationUtils {
      */
     public static int getNotificationColor(Context context) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+        builder.setContentText("sfsdf");
         Notification notification = builder.build();
 
         if (notification.contentView == null) {
             return DEF_NOTIFICATION_COLOR;
         }
+        KLog.e("contentView!=null");
 
         int layoutId = notification.contentView.getLayoutId();
         ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(context).inflate(layoutId, null, false);
@@ -39,27 +41,6 @@ public class NotificationUtils {
             Log.e(TAG, "getNotificationColor,find notification title view");
             return ((TextView) viewGroup.findViewById(android.R.id.title)).getCurrentTextColor();
         }
-        return findColor(viewGroup);
-    }
-
-    private static int findColor(ViewGroup viewGroupSource) {
-        int color = DEF_NOTIFICATION_COLOR;
-        LinkedList<ViewGroup> viewGroups = new LinkedList<>();
-        viewGroups.add(viewGroupSource);
-        while (viewGroups.size() > 0) {
-            ViewGroup viewGroup1 = viewGroups.getFirst();
-            for (int i = 0; i < viewGroup1.getChildCount(); i++) {
-                if (viewGroup1.getChildAt(i) instanceof ViewGroup) {
-                    viewGroups.add((ViewGroup) viewGroup1.getChildAt(i));
-                } else if (viewGroup1.getChildAt(i) instanceof TextView) {
-                    if (((TextView) viewGroup1.getChildAt(i)).getCurrentTextColor() != -1) {
-                        Log.e(TAG, "findColor,find notification title view");
-                        color = ((TextView) viewGroup1.getChildAt(i)).getCurrentTextColor();
-                    }
-                }
-            }
-            viewGroups.remove(viewGroup1);
-        }
-        return color;
+        return DEF_NOTIFICATION_COLOR;
     }
 }
